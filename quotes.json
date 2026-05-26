@@ -1,0 +1,166 @@
+{
+  "na_werkdag": [
+    { "text": "Allee Jonas. Schoenen aan. Vijf minuten. Daarna neemt je lichaam het over.", "source": "" },
+    { "text": "De trainingen die je doet als je het minst wil doen — dat zijn de trainingen die tellen.", "source": "" },
+    { "text": "Je dag is voorbij. Jouw training is nog niet. Verander van schoenen.", "source": "" },
+    { "text": "Na een werkdag de fiets op. Dat is de scheiding tussen diegene die dromen en diegene die doen.", "source": "" },
+    { "text": "Everybody's tired after work. Champions train anyway.", "source": "" },
+    { "text": "De couch is comfortabel. Nice is het niet. Keuze is aan jou.", "source": "" },
+    { "text": "Start La Grange. Doe je ogen dicht 10 seconden. Dan vertrek je.", "source": "🎵 ZZ Top — La Grange (Remastered)" },
+    { "text": "Je werkt al de hele dag. Nu werk je voor jezelf.", "source": "" }
+  ],
+
+  "pre_vo2max": [
+    { "text": "Je bent bang dat je het wattage niet haalt. Goed. Die angst maakt je scherp. Elke watt is een seconde minder in Nice.", "source": "" },
+    { "text": "De VO2max blokjes doen pijn. Dat is precies de bedoeling. Pijn is geen teken dat er iets fout gaat — het is het teken dat je beter wordt.", "source": "" },
+    { "text": "When you think that you are done, you are only 40% done.", "source": "David Goggins" },
+    { "text": "Als je dit doet, wordt de wedstrijd een stuk makkelijker. Matthieu Bonne wist het. Nu weet jij het ook.", "source": "" },
+    { "text": "Your old wattage is not gone. It's waiting. Go find it tonight.", "source": "" },
+    { "text": "Threshold sessions don't just build fitness. They build character.", "source": "" },
+    { "text": "Als het brandt op de pedalen: dat is Nice dat zich bouwt in je benen.", "source": "" },
+    { "text": "When your legs scream stop, your mind decides. Let it decide right.", "source": "" }
+  ],
+
+  "lsd_ride": [
+    { "text": "Nice zit vol heuvels. Vandaag train je de benen die die heuvels beklimmen. Settle in.", "source": "" },
+    { "text": "Start La Grange. Zet je helm op. Vertrek. De rest komt vanzelf.", "source": "🎵 ZZ Top — La Grange (Remastered)" },
+    { "text": "Vier uur. Watt per watt, kilometer per kilometer. Aan het einde kijk je terug en denk je: dat deed ik.", "source": "" },
+    { "text": "Long rides are not about speed. They are about building the engine that wins in Nice.", "source": "" },
+    { "text": "De lange rit is niet spectaculair. Maar hij is onmisbaar.", "source": "" },
+    { "text": "Settle in. Find your rhythm. Three hours from now, you are stronger.", "source": "" },
+    { "text": "Je benen weten al wat ze moeten doen. Vertrouw ze.", "source": "" }
+  ],
+
+  "lsd_run": [
+    { "text": "Als het moeilijk wordt op km 10: dit is maar een kleine wandeling met Balou. En Balou trekt je mee naar de finish.", "source": "" },
+    { "text": "Elke stap brengt je dichter bij de finishstrook in Nice.", "source": "" },
+    { "text": "Een lange duurloop is een gesprek met jezelf. Luister.", "source": "" },
+    { "text": "Je benen onthouden dit. Elke kilometer bouwt het geheugen op dat Nice nodig heeft.", "source": "" },
+    { "text": "Km 15 voelt zwaar? Gewoon een kleine wandeling met Balou. Eén stap. Dan nog één.", "source": "" },
+    { "text": "Your legs know how to do this. Let them lead. You just show up.", "source": "" },
+    { "text": "Als het moeilijk wordt: dit nummer is voor jou. Zet het op.", "source": "🎵 Tones and I — I Made It" }
+  ],
+
+  "herstel": [
+    { "text": "Zware benen? Klopt. De eerste vijf minuten zullen hard zijn. Daarna neemt je lichaam het over — dat beloof ik je.", "source": "" },
+    { "text": "Easy doesn't mean weak. Easy means smart.", "source": "" },
+    { "text": "Je lichaam bouwt nu. Niet tijdens de inspanning — daarna. Laat het werken.", "source": "" },
+    { "text": "Herstel is niet opgeven. Herstel is laden voor morgen.", "source": "" },
+    { "text": "Rustig rijden is geen verloren tijd. Het is de motor onderhouden.", "source": "" },
+    { "text": "The body adapts during rest. Today is where you get stronger.", "source": "" },
+    { "text": "Laag hartslag vandaag. Volle tank morgen.", "source": "" }
+  ],
+
+  "comeback": [
+    { "text": "Je CTL is gedaald. Logisch — je gaf alles in El Salvador. Nu bouw je terug op, één training tegelijk. Nice, 13 september, wacht.", "source": "" },
+    { "text": "De dip na El Salvador is geen zwakte. Het is het bewijs dat je alles hebt gegeven. Eervolle vermoeidheid.", "source": "" },
+    { "text": "Nice, 13 september. Je familie staat aan de finish. Begin vandaag aan de weg terug.", "source": "" },
+    { "text": "Je hebt het WK gehaald op wilskracht. Nu bouw je er naartoe met dezelfde wilskracht.", "source": "ref. Matthieu Bonne — Wilskracht" },
+    { "text": "Je kan overal geraken als je er gewoon voor gaat.", "source": "Matthieu Bonne" },
+    { "text": "Sam Laidlow had een moeilijk jaar. Hij racete toch. Hij won Challenge Roth. Jij staat ook terug op.", "source": "" },
+    { "text": "Wout Van Aert: 'Ik hoef het niet meer voor iemand anders te doen.' Doe het voor jezelf. En voor Nice.", "source": "Wout Van Aert" },
+    { "text": "Elke training nu is een stap terug naar jouw beste vorm ooit.", "source": "" },
+    { "text": "I made it, I made it. Jij hebt het ook gemaakt. En je maakt het opnieuw.", "source": "🎵 Tones and I — I Made It" }
+  ],
+
+  "slechte_week": [
+    { "text": "Jonas. Ik zie het. Je hebt deze week al trainingen laten liggen. Genoeg. Vandaag reset je. Verbreek de reeks — begin een nieuwe.", "source": "" },
+    { "text": "Stop met tellen hoeveel je hebt gemist. Begin met tellen hoeveel je nog kunt doen.", "source": "" },
+    { "text": "Slechte week? Dat is één week. Vandaag begint een nieuwe. Nu.", "source": "" },
+    { "text": "Elke dag zonder training is een dag dat Nice verder schuift. Niet vandaag.", "source": "" },
+    { "text": "Je einddoel is Nice. Je familie staat daar. Herpak je — nu.", "source": "" },
+    { "text": "Consistency is a choice. Make it tonight.", "source": "" },
+    { "text": "Kom aan Jonas. Trainingsschoen aan. Geen discussie meer. Nu.", "source": "" }
+  ],
+
+  "groene_reeks": [
+    { "text": "Consistency is key. Je bent locked in. Houd die streak — vanavond nog één.", "source": "" },
+    { "text": "Training na training. Zo bouw je een kampioen. Keep going.", "source": "" },
+    { "text": "Nu ben je echt fitness aan het bouwen. Elke groene dag is een investering in Nice.", "source": "" },
+    { "text": "Vier op rij. Zo werkt het. Niet één grote training — consistentie wint.", "source": "" },
+    { "text": "Je bent in de flow. Bescherm die. Vanavond nog één.", "source": "" },
+    { "text": "Wout Van Aert werd niet kampioen op één dag. Hij werd kampioen door dag na dag te verschijnen. Net als jij nu.", "source": "Wout Van Aert" },
+    { "text": "Streak actief. Nice wordt gebouwd. Ga er vandaag opnieuw voor.", "source": "" }
+  ],
+
+  "vorige_training_rood": [
+    { "text": "Gisteren was oranje. Dat is gisteren. Vandaag is wit. Maak er groen van.", "source": "" },
+    { "text": "One bad session doesn't define you. What you do next does.", "source": "" },
+    { "text": "Je bent niet zwak. Je bent menselijk. Vandaag doe je het opnieuw.", "source": "" },
+    { "text": "Vergeet gisteren. Jouw lichaam heeft al vergeten. Je hoofd ook — nu.", "source": "" },
+    { "text": "Oranje gisteren. Groen vandaag. Zo simpel is het.", "source": "" },
+    { "text": "Sam Laidlow verloor Kona. Hij verscheen terug. Hij won Challenge Roth. Net als jij vandaag.", "source": "" }
+  ],
+
+  "rest_day": [
+    { "text": "Rustdag. Visualiseer Nice. Je familie aan de finish. Jij die de lijn oversteekt. Bereid je hoofd voor.", "source": "" },
+    { "text": "Vandaag rust je. Je lichaam werkt. Morgen val je aan.", "source": "" },
+    { "text": "Verre rien van de dolfijntjes — vandaag rusten we gewoon.", "source": "" },
+    { "text": "Rest is training for the mind.", "source": "" },
+    { "text": "Gebruik deze dag: slaap goed, eet goed, visualiseer het parcours in Nice.", "source": "" },
+    { "text": "De sportiefste keuze is soms gewoon niks doen.", "source": "" }
+  ],
+
+  "race_week_a": [
+    { "text": "De hay is in the barn. Je hebt alles gedaan wat je kon doen. Nu vertrouw je er volledig op.", "source": "" },
+    { "text": "Je familie reist naar Nice voor jou. Jij hebt in Lanzarote getraind voor hen. Het werk is gedaan.", "source": "" },
+    { "text": "Stay calm. Stay sharp. You've done the work of a world champion. Now act like one.", "source": "" },
+    { "text": "WK-week. De spanning, de twijfel — dat is normaal. Champions racen er toch mee.", "source": "" },
+    { "text": "Nice wordt warm. Nice heeft heuvels. Nice wordt het mooiste moment van je seizoen.", "source": "" },
+    { "text": "Je hebt het WK-ticket verdiend in El Salvador. Nu kom je het inlossen in Nice.", "source": "" },
+    { "text": "Matthieu Bonne brak wereldrecords door te vertrouwen op zijn voorbereiding. Vertrouw de jouwe.", "source": "" },
+    { "text": "Had to be patient for a long time. That made it more special.", "source": "Wout Van Aert" }
+  ],
+
+  "race_day_a": [
+    { "text": "Alle vroege wekkers, lege spieren, eenzame avondtrainingen — dit is waarvoor. Je familie staat aan de finish in Nice. Ga ze halen.", "source": "" },
+    { "text": "Race jouw race. Vertrouw jouw training. Geniet van elke seconde pijn.", "source": "" },
+    { "text": "Als het pijn doet op de run: dit is maar een kleine wandeling met Balou. En Balou trekt je mee naar de finish.", "source": "" },
+    { "text": "IRONMAN 70.3 World Championship. Jij staat op die startlijn. Dat verdiende jij in El Salvador.", "source": "" },
+    { "text": "Zwem rustig. Fiets alles. Loop alles. Dat is jouw race.", "source": "" },
+    { "text": "Souffrir pour gagner. Aujourd'hui, c'est le jour.", "source": "" },
+    { "text": "I made it, I made it. Vandaag zingen ze dat over jou.", "source": "🎵 Tones and I — I Made It" },
+    { "text": "He Mele No Lilo. Jouw Hawaii. Jouw Nice. Vandaag.", "source": "🎵 He Mele No Lilo — Lilo & Stitch" }
+  ],
+
+  "race_week_b": [
+    { "text": "Geen A-race, maar wél een race. Race met vrijheid. Laat je tanden zien op de fiets en de run.", "source": "" },
+    { "text": "Zwemmen conservatief. Op de fiets laat je zien wie je bent. De run geef je alles.", "source": "" },
+    { "text": "B-race betekent vrijheid. Geen druk van Nice — wel volle inzet.", "source": "" },
+    { "text": "Gebruik deze race als dress rehearsal voor Nice. Voel hoe het is om terug in racemodus te zijn.", "source": "" },
+    { "text": "Geniet ervan. Race zonder druk, maar race wel.", "source": "" },
+    { "text": "Aujourd'hui tu cours. Demain tu seras plus fort pour Nice.", "source": "" }
+  ],
+
+  "race_day_b": [
+    { "text": "Vandaag race je vrij. Zwem rustig. Daarna geef je alles op de fiets. En de run is voor Nice.", "source": "" },
+    { "text": "Fiets: gas. Run: alles. Dat is jouw race vandaag.", "source": "" },
+    { "text": "Enjoy the race. Race the bike. Race the run. That's it.", "source": "" },
+    { "text": "Race vrij. Race hard. Kom sterker terug voor Nice.", "source": "" },
+    { "text": "Allez, on y va ! C'est ta course aujourd'hui.", "source": "" },
+    { "text": "Dit is trainen voor Nice, maar dan met publiek en een finishlijn. Geniet.", "source": "" }
+  ],
+
+  "goggins": [
+    { "text": "When you think that you are done, you are only 40% done.", "source": "David Goggins" },
+    { "text": "Nobody is going to come and save you. Get on the bike.", "source": "David Goggins" },
+    { "text": "Moe zijn is geen reden. Iedereen is moe. Weinigen trainen er toch doorheen.", "source": "" },
+    { "text": "Suffering is the true test of life.", "source": "David Goggins" },
+    { "text": "Pain is temporary. Nice is forever.", "source": "" },
+    { "text": "If it is endurable, then endure it. Stop complaining.", "source": "Marcus Aurelius" },
+    { "text": "Put on Thunderstruck. Start pedaling. Stop overthinking.", "source": "🎵 AC/DC — Thunderstruck" }
+  ],
+
+  "general": [
+    { "text": "Nice, 13 september. Tick tock.", "source": "" },
+    { "text": "Discipline equals freedom.", "source": "Jocko Willink" },
+    { "text": "Good.", "source": "Jocko Willink" },
+    { "text": "Allez, on y va !", "source": "" },
+    { "text": "Souffrir pour gagner.", "source": "" },
+    { "text": "Komaan. Één training. Dan ga je zien.", "source": "" },
+    { "text": "You didn't come this far to only come this far.", "source": "" },
+    { "text": "Train smart, race hard, live well.", "source": "Jan Frodeno" },
+    { "text": "The finish line is not where the journey ends. It's where the next one begins.", "source": "Jan Frodeno" },
+    { "text": "Verre rien van de dolfijntjes — maar voor die van Nice gaan we.", "source": "" }
+  ]
+}

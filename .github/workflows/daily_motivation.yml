@@ -1,0 +1,87 @@
+name: Dagelijkse Triathlon Motivatie
+
+# ─── Triggers ──────────────────────────────────────────────────────────────────
+on:
+  schedule:
+    # Weekdagen 16:15 CEST (= 14:15 UTC)  →  notificatie versturen
+    - cron: '15 14 * * 1-5'
+    # Weekend 07:00 CEST (= 05:00 UTC)    →  notificatie versturen
+    - cron: '0 5 * * 6,0'
+    # Elke dag 13:00 CEST (= 11:00 UTC)   →  check morgen, GEEN notificatie
+    - cron: '0 11 * * *'
+
+  # Handmatig triggeren vanuit GitHub UI
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: "Welke modus? (notify / check-tomorrow / test)"
+        required: false
+        default: 'notify'
+        type: choice
+        options:
+          - notify
+          - check-tomorrow
+          - test
+
+# ─── Jobs ──────────────────────────────────────────────────────────────────────
+
+jobs:
+
+  # ── Job 1: Dagelijkse controle om 13:00 ─────────────────────────────────────
+  check-tomorrow:
+    name: "Controle morgen (13:00 CEST)"
+    runs-on: ubuntu-latest
+    if: >
+      (github.event_name == 'schedule' && github.event.schedule == '0 11 * * *') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.mode == 'check-tomorrow')
+
+    steps:
+      - name: Code ophalen
+        uses: actions/checkout@v4
+
+      - name: Python 3.11 opzetten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Paketten installeren
+        run: |
+          python -m pip install --upgrade pip --quiet
+          pip install -e . --quiet
+
+      - name: Controleer morgen's training
+        env:
+          TP_AUTH_COOKIE: ${{ secrets.TP_AUTH_COOKIE }}
+        run: python daily_motivation.py --check-tomorrow
+
+  # ── Job 2: Motivatie notificatie (16:15 / 07:00) ────────────────────────────
+  send-notification:
+    name: "Stuur motivatie notificatie"
+    runs-on: ubuntu-latest
+    if: >
+      (github.event_name == 'schedule' && github.event.schedule != '0 11 * * *') ||
+      (github.event_name == 'workflow_dispatch' && github.event.inputs.mode != 'check-tomorrow')
+
+    steps:
+      - name: Code ophalen
+        uses: actions/checkout@v4
+
+      - name: Python 3.11 opzetten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Paketten installeren
+        run: |
+          python -m pip install --upgrade pip --quiet
+          pip install -e . --quiet
+
+      - name: Verstuur motivatie notificatie
+        env:
+          TP_AUTH_COOKIE: ${{ secrets.TP_AUTH_COOKIE }}
+        run: |
+          if [ "${{ github.event.inputs.mode }}" = "test" ]; then
+            python daily_motivation.py --test
+          else
+            python daily_motivation.py
+          fi
