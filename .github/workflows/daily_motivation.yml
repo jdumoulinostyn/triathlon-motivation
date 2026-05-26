@@ -11,20 +11,20 @@ jobs:
   motivatie:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-
-      - uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - run: pip install -e . --quiet
+      - name: Code ophalen via publieke URL (geen checkout nodig)
+        run: |
+          wget -q https://github.com/jdumoulinostyn/triathlon-motivation/archive/refs/heads/main.zip
+          unzip -q main.zip
+          cd triathlon-motivation-main
+          pip install -e . --quiet
 
       - name: Uitvoeren
         env:
           TP_AUTH_COOKIE: ${{ secrets.TP_AUTH_COOKIE }}
         run: |
+          cd triathlon-motivation-main
           if [ "${{ github.event.schedule }}" = "0 11 * * *" ]; then
-            python daily_motivation.py --check-tomorrow
+            python3 daily_motivation.py --check-tomorrow
           else
-            python daily_motivation.py
+            python3 daily_motivation.py
           fi
