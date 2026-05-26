@@ -2,6 +2,8 @@ name: Minimal Test
 
 on:
   workflow_dispatch:
+  schedule:
+    - cron: '21 12 * * *'
 
 jobs:
   test:
