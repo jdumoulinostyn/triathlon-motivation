@@ -3,10 +3,11 @@ name: Minimal Test
 on:
   workflow_dispatch:
   schedule:
-    - cron: '21 12 * * *'
+    - cron: '29 12 * * *'
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
+      - uses: actions/checkout@v4
       - run: echo "GitHub Actions werkt!"
