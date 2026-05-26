@@ -1,54 +1,30 @@
 name: Dagelijkse Triathlon Motivatie
 
-# ─── Triggers ──────────────────────────────────────────────────────────────────
 on:
   schedule:
-    - cron: '15 14 * * 1-5'   # Ma–Vr 16:15 CEST  (= 14:15 UTC)
-    - cron: '0 5 * * 6,0'     # Za–Zo 07:00 CEST  (= 05:00 UTC)
-    - cron: '0 11 * * *'      # Elke dag 13:00 CEST check (= 11:00 UTC)
+    - cron: '15 14 * * 1-5'   # Ma–Vr 16:15 CEST
+    - cron: '0 5 * * 6,0'     # Za–Zo 07:00 CEST
+    - cron: '0 11 * * *'      # Elke dag 13:00 CEST check
   workflow_dispatch:
-    inputs:
-      mode:
-        description: "notify / check-tomorrow / test"
-        required: false
-        default: 'notify'
 
-# ─── Job ───────────────────────────────────────────────────────────────────────
 jobs:
   motivatie:
-    name: "Triathlon motivatie"
     runs-on: ubuntu-latest
-
     steps:
-      - name: Code ophalen
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Python 3.11 opzetten
-        uses: actions/setup-python@v5
+      - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
 
-      - name: Paketten installeren
-        run: |
-          python -m pip install --upgrade pip --quiet
-          pip install -e . --quiet
+      - run: pip install -e . --quiet
 
       - name: Uitvoeren
         env:
           TP_AUTH_COOKIE: ${{ secrets.TP_AUTH_COOKIE }}
         run: |
-          SCHEDULE="${{ github.event.schedule }}"
-          MODE="${{ github.event.inputs.mode }}"
-
-          if [ "$SCHEDULE" = "0 11 * * *" ] || [ "$MODE" = "check-tomorrow" ]; then
-            echo "=== Dagelijkse check (morgen) ==="
+          if [ "${{ github.event.schedule }}" = "0 11 * * *" ]; then
             python daily_motivation.py --check-tomorrow
-
-          elif [ "$MODE" = "test" ]; then
-            echo "=== Testmodus (geen TrainingPeaks) ==="
-            python daily_motivation.py --test
-
           else
-            echo "=== Notificatie versturen ==="
             python daily_motivation.py
           fi
