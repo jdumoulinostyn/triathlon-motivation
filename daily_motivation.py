@@ -438,9 +438,12 @@ def send_notification(payload: dict) -> bool:
 
 async def run_check_tomorrow() -> None:
     """
+    Dagelijkse check om 12:00 CEST.
     Controleert of morgen's training al in TrainingPeaks staat.
-    Geeft een voorspelling van de categorie van morgen.
-    Stuurt GEEN notificatie — enkel logging.
+    Stuurt een notificatie ALLEEN als er iets actie vereist:
+      - Geen training gevonden voor morgen
+      - Morgen is een racedag
+    Normale dagen (training gevonden, geen race) → enkel logging, geen melding.
     """
     try:
         from tp_mcp.tools.fitness  import tp_get_fitness
@@ -454,7 +457,7 @@ async def run_check_tomorrow() -> None:
     tomorrow = today + timedelta(days=1)
     ten_ago  = today - timedelta(days=10)
 
-    print(f"[CHECK] Controle voor morgen: {tomorrow} (CEST 13:00 dagelijkse check)")
+    print(f"[CHECK] Dagelijkse check 12:00 — controle voor morgen: {tomorrow}")
 
     try:
         fitness  = await tp_get_fitness(days=14)
@@ -478,10 +481,8 @@ async def run_check_tomorrow() -> None:
         print(f"[FOUT] TrainingPeaks niet bereikbaar: {exc}")
         sys.exit(1)
 
-    # Toon fitness
+    # Logging
     print(f"[CHECK] TSB: {round(tsb, 1)}  |  CTL: {round(ctl, 1)}  |  ATL: {round(atl, 1)}")
-
-    # Toon morgen's trainingen
     print(f"[CHECK] Trainingen morgen: {len(workouts_tomorrow)}")
     for w in workouts_tomorrow:
         title = w.get("title", "?")
@@ -490,29 +491,54 @@ async def run_check_tomorrow() -> None:
         sport = detect_sport(title, w.get("description", ""))
         print(f"         [{sport.upper()}] {title} — {dur_s}")
 
-    if not workouts_tomorrow:
-        print("[WARN]  Geen trainingen gevonden voor morgen.")
-        print("[WARN]  Coach heeft mogelijk nog niet geladen — check TrainingPeaks.")
+    # ── Bepaal of er een notificatie nodig is ───────────────────────────────
+    days_next  = _event_days(next_event)
+    days_focus = _event_days(focus_event)
+    notify_payload = None
 
-    # Voorspel categorie (context met morgen's workouts als 'vandaag')
+    # Racedag morgen
+    if days_next == 1:
+        race_name = (next_event or {}).get("name", "Race")
+        is_a      = _is_a_race(next_event)
+        notify_payload = {
+            "topic":    NTFY_TOPIC,
+            "title":    f"🏁 Morgen is racedag — {race_name}",
+            "message":  "Slaap goed. Alles is klaar. Morgen race je.",
+            "priority": 4 if is_a else 3,
+            "tags":     ["fire", "trophy"] if is_a else ["fire", "calendar"],
+        }
+        print(f"[CHECK] Racedag morgen ({race_name}) — notificatie verstuurd")
+
+    # Geen training gevonden voor morgen
+    elif not workouts_tomorrow:
+        notify_payload = {
+            "topic":    NTFY_TOPIC,
+            "title":    "⚠️ Geen training in TrainingPeaks voor morgen",
+            "message":  "Coach heeft mogelijk nog niet geladen. Check TrainingPeaks of contacteer je coach.",
+            "priority": 3,
+            "tags":     ["warning"],
+        }
+        print("[CHECK] Geen training morgen — waarschuwing verstuurd")
+
+    else:
+        print("[CHECK] Alles ok — geen melding nodig")
+
+    if notify_payload:
+        send_notification(notify_payload)
+
+    # Voorspelling voor de logs
     context_tomorrow = {
-        "tsb":              round(tsb, 1),
-        "ctl":              round(ctl, 1),
-        "atl":              round(atl, 1),
-        "workouts_today":   workouts_tomorrow,
-        "workouts_recent":  workouts_recent,
-        "next_event":       next_event,
-        "focus_event":      focus_event,
-        "error":            None,
+        "tsb":             round(tsb, 1),
+        "ctl":             round(ctl, 1),
+        "atl":             round(atl, 1),
+        "workouts_today":  workouts_tomorrow,
+        "workouts_recent": workouts_recent,
+        "next_event":      next_event,
+        "focus_event":     focus_event,
+        "error":           None,
     }
     category = determine_category(context_tomorrow)
-    quotes   = load_quotes()
-    example  = pick_quote(category, quotes)
-
-    print(f"[CHECK] Verwachte categorie morgen : {category}")
-    print(f"[CHECK] Voorbeeldquote             : {example['text']}")
-    if example.get("source"):
-        print(f"[CHECK] Bron                       : {example['source']}")
+    print(f"[CHECK] Verwachte categorie morgen: {category}")
 
 
 # ─── Main ──────────────────────────────────────────────────────────────────────

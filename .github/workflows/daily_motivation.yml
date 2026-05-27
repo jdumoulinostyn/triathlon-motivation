@@ -4,7 +4,7 @@ on:
   schedule:
     - cron: '15 14 * * 1-5'   # Ma–Vr 16:15 CEST
     - cron: '0 5 * * 6,0'     # Za–Zo 07:00 CEST
-    - cron: '0 11 * * *'      # Elke dag 13:00 CEST check
+    - cron: '0 10 * * *'      # Elke dag 12:00 CEST check
   workflow_dispatch:
 
 jobs:
@@ -23,7 +23,7 @@ jobs:
           TP_AUTH_COOKIE: ${{ secrets.TP_AUTH_COOKIE }}
         run: |
           cd triathlon-motivation-main
-          if [ "${{ github.event.schedule }}" = "0 11 * * *" ]; then
+          if [ "${{ github.event.schedule }}" = "0 10 * * *" ]; then
             python3 daily_motivation.py --check-tomorrow
           else
             python3 daily_motivation.py
