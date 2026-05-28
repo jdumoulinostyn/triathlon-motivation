@@ -23,6 +23,23 @@ jobs:
           TP_AUTH_COOKIE: ${{ secrets.TP_AUTH_COOKIE }}
         run: |
           cd triathlon-motivation-main
+
+          # Tijdvenster: sla over als GitHub Actions meer dan 1u te laat startte.
+          # Voorkomt notificaties om 23u bij een voor 16:15 geplande run.
+          SCHEDULE="${{ github.event.schedule }}"
+          if [ -n "$SCHEDULE" ]; then
+            NOW=$(date -u +%H%M)
+            SKIP=false
+            [[ "$SCHEDULE" = "15 14 * * 1-5" && "$NOW" > "1514" ]] && SKIP=true
+            [[ "$SCHEDULE" = "0 5 * * 6,0"   && "$NOW" > "0559" ]] && SKIP=true
+            [[ "$SCHEDULE" = "0 10 * * *"    && "$NOW" > "1059" ]] && SKIP=true
+            if [ "$SKIP" = "true" ]; then
+              echo "⏰ Te laat gestart ($(date -u '+%H:%M') UTC) — notificatie overgeslagen."
+              exit 0
+            fi
+            echo "✓ Tijdvenster OK ($(date -u '+%H:%M') UTC)."
+          fi
+
           if [ "${{ github.event.schedule }}" = "0 10 * * *" ]; then
             python3 daily_motivation.py --check-tomorrow
           else

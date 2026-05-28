@@ -198,6 +198,11 @@ async def get_training_context() -> dict:
 
         # Fitness
         fitness = await tp_get_fitness(days=14)
+        if fitness.get("isError"):
+            return {
+                "error":      f"TP fitness API: {fitness.get('message', 'onbekend')}",
+                "error_code": fitness.get("error_code", ""),
+            }
         current = fitness.get("current") or {}
         tsb = current.get("tsb", 0.0)
         ctl = current.get("ctl", 0.0)
@@ -205,6 +210,11 @@ async def get_training_context() -> dict:
 
         # Vandaag
         w_today = await tp_get_workouts(start_date=str(today), end_date=str(today))
+        if w_today.get("isError"):
+            return {
+                "error":      f"TP workouts API: {w_today.get('message', 'onbekend')}",
+                "error_code": w_today.get("error_code", ""),
+            }
         workouts_today = w_today.get("workouts", []) if isinstance(w_today, dict) else []
 
         # Afgelopen 10 dagen (inclusief vandaag)
@@ -419,6 +429,22 @@ def build_payload(quote: dict, category: str, context: dict | None = None) -> di
 
 # ─── Versturen ────────────────────────────────────────────────────────────────
 
+AUTH_ERROR_CODES = {"AUTH_EXPIRED", "AUTH_INVALID"}
+
+
+def send_cookie_expired_notification() -> None:
+    """Stuurt een melding dat de TrainingPeaks cookie verlopen is."""
+    payload = {
+        "topic":    NTFY_TOPIC,
+        "title":    "🔑 TrainingPeaks cookie verlopen",
+        "message":  "Voer get_cookie_for_github.py uit en update TP_AUTH_COOKIE in GitHub Secrets.",
+        "priority": 4,
+        "tags":     ["warning"],
+    }
+    send_notification(payload)
+    print("[INFO] Cookie-verlopen melding verstuurd via ntfy.")
+
+
 def send_notification(payload: dict) -> bool:
     data = json.dumps(payload).encode("utf-8")
     req  = urllib.request.Request(
@@ -461,12 +487,22 @@ async def run_check_tomorrow() -> None:
 
     try:
         fitness  = await tp_get_fitness(days=14)
+        if fitness.get("isError"):
+            print(f"[WARN] Fitness API fout: {fitness.get('message', 'onbekend')}")
+            if fitness.get("error_code") in AUTH_ERROR_CODES:
+                send_cookie_expired_notification()
+            return
         current  = fitness.get("current") or {}
         tsb = current.get("tsb", 0.0)
         ctl = current.get("ctl", 0.0)
         atl = current.get("atl", 0.0)
 
         w_tomorrow = await tp_get_workouts(start_date=str(tomorrow), end_date=str(tomorrow))
+        if w_tomorrow.get("isError"):
+            print(f"[WARN] API fout bij workouts morgen: {w_tomorrow.get('message', 'onbekend')}")
+            if w_tomorrow.get("error_code") in AUTH_ERROR_CODES:
+                send_cookie_expired_notification()
+            return
         workouts_tomorrow = w_tomorrow.get("workouts", []) if isinstance(w_tomorrow, dict) else []
 
         w_recent = await tp_get_workouts(start_date=str(ten_ago), end_date=str(today))
@@ -562,7 +598,11 @@ async def main():
         context = await get_training_context()
 
         if context.get("error"):
-            print(f"[WARN] TP niet bereikbaar ({context['error']}) — fallback naar 'general'")
+            print(f"[WARN] TP niet bereikbaar ({context['error']})")
+            if context.get("error_code") in AUTH_ERROR_CODES:
+                send_cookie_expired_notification()
+                sys.exit(0)
+            print("[WARN] Tijdelijke fout — fallback naar 'general'")
         else:
             analysis = analyse_recent(context.get("workouts_recent", []))
             print(f"[INFO] TSB: {context['tsb']}  |  CTL: {context['ctl']}  |  ATL: {context['atl']}")
