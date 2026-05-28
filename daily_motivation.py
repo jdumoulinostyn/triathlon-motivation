@@ -31,12 +31,16 @@ NTFY_TOPIC  = "jonas-triathlon-mindset"
 NTFY_URL    = "https://ntfy.sh"
 QUOTES_FILE = Path(__file__).parent / "quotes.json"
 
-# Drempels groene reeks / slechte week
+# Drempels groene reeks / slechte week / niet volledig
 GREEN_STREAK_MIN        = 4     # min. opeenvolgende groene sessies
-BAD_WEEK_CONSECUTIVE    = 2     # opeenvolgende rood/oranje triggert slechte_week
-BAD_WEEK_TOTAL          = 3     # of totaal X in 7 dagen
+SKIP_CONSECUTIVE        = 2     # opeenvolgende OVERGESLAGEN → slechte_week
+SKIP_TOTAL              = 3     # of totaal X overgeslagen in 10 dagen → slechte_week
+INCOMPLETE_MIN          = 2     # min. niet-volledig (gedaan maar kort) → niet_volledig
 COMPLETION_GREEN        = 0.85  # >= 85% = groen
 COMPLETION_RED          = 0.60  # < 60%  = rood, daartussen = oranje
+# Backward compat (niet meer gebruikt in logica, enkel voor leesbaarheid)
+BAD_WEEK_CONSECUTIVE    = SKIP_CONSECUTIVE
+BAD_WEEK_TOTAL          = SKIP_TOTAL
 
 # Sport-detectie keywords (op basis van titel + beschrijving)
 BIKE_KW  = ["ride", "fiets", "zwift", "cycling", "bike", "pedal", "watt",
@@ -124,42 +128,61 @@ def get_completion(workout: dict) -> float | None:
 
 def analyse_recent(recent_workouts: list[dict]) -> dict:
     """
-    Analyseert de afgelopen 7 dagen (fiets + loop, geen zwemmen).
-    Geeft terug: green_streak, bad_total, bad_consecutive.
+    Analyseert de afgelopen 10 dagen (fiets + loop, geen zwemmen).
+    Onderscheidt overgeslagen (nooit gestart) van niet-volledig (gestart maar kort).
+
+    Geeft terug:
+      green_streak        — opeenvolgende groene sessies
+      skipped_total       — totaal overgeslagen (planned, datum verstreken)
+      skipped_consecutive — max opeenvolgende overgeslagen
+      incomplete_total    — totaal gestart maar < 85% voltooid
     """
     today = date.today().isoformat()
 
-    # Filter: enkel fiets en loop, enkel verleden
     relevant = [
         w for w in recent_workouts
         if w.get("date", "") <= today
         and detect_sport(w.get("title", ""), w.get("description", "")) in ("bike", "run")
     ]
-    # Sorteer oudste → nieuwste
     relevant.sort(key=lambda w: w.get("date", ""))
 
-    green_streak = 0
-    bad_total = 0
-    bad_consecutive = 0
-    max_consecutive = 0
+    green_streak        = 0
+    skipped_total       = 0
+    skipped_consecutive = 0
+    max_skip_consec     = 0
+    incomplete_total    = 0
 
     for w in relevant:
-        comp = get_completion(w)
+        comp  = get_completion(w)
+        wtype = w.get("type", "")
+
         if comp is None:
-            continue
-        if comp >= COMPLETION_GREEN:
-            green_streak += 1
-            bad_consecutive = 0
+            continue  # toekomstige training
+
+        if comp == 0.0 and wtype == "planned":
+            # Nooit gestart — overgeslagen
+            skipped_total      += 1
+            skipped_consecutive += 1
+            max_skip_consec     = max(max_skip_consec, skipped_consecutive)
+            green_streak        = 0
+        elif comp >= COMPLETION_GREEN:
+            # Volledig afgerond
+            green_streak        += 1
+            skipped_consecutive  = 0
         else:
-            bad_total += 1
-            bad_consecutive += 1
-            max_consecutive = max(max_consecutive, bad_consecutive)
-            green_streak = 0  # reset streak bij slechte training
+            # Gestart maar niet volledig (comp > 0 en < 0.85)
+            incomplete_total    += 1
+            skipped_consecutive  = 0   # gedaan = geen skip meer
+            green_streak         = 0
 
     return {
-        "green_streak":     green_streak,
-        "bad_total":        bad_total,
-        "bad_consecutive":  max_consecutive,
+        "green_streak":        green_streak,
+        "skipped_total":       skipped_total,
+        "skipped_consecutive": max_skip_consec,
+        "incomplete_total":    incomplete_total,
+        # Backward compat
+        "bad_total":       skipped_total + incomplete_total,
+        "bad_consecutive": max_skip_consec,
     }
 
 
@@ -295,12 +318,13 @@ def determine_category(context: dict) -> str:
     workouts_recent  = context.get("workouts_recent", [])
 
     analysis = analyse_recent(workouts_recent)
-    green_streak    = analysis["green_streak"]
-    bad_total       = analysis["bad_total"]
-    bad_consecutive = analysis["bad_consecutive"]
+    green_streak        = analysis["green_streak"]
+    skipped_consecutive = analysis["skipped_consecutive"]
+    skipped_total       = analysis["skipped_total"]
+    incomplete_total    = analysis["incomplete_total"]
 
-    # ── Slechte week (2 opeenvolgend of 3 totaal) ───────────────────────────
-    if bad_consecutive >= BAD_WEEK_CONSECUTIVE or bad_total >= BAD_WEEK_TOTAL:
+    # ── Slechte week: enkel bij écht overgeslagen trainingen ────────────────
+    if skipped_consecutive >= SKIP_CONSECUTIVE or skipped_total >= SKIP_TOTAL:
         return "slechte_week"
 
     # ── Geen training vandaag ────────────────────────────────────────────────
@@ -332,6 +356,10 @@ def determine_category(context: dict) -> str:
     # ── Groene reeks ─────────────────────────────────────────────────────────
     if green_streak >= GREEN_STREAK_MIN:
         return "groene_reeks"
+
+    # ── Niet volledig: gedaan maar meerdere keren te kort ────────────────────
+    if incomplete_total >= INCOMPLETE_MIN:
+        return "niet_volledig"
 
     # ── Gisteren rood/oranje ─────────────────────────────────────────────────
     if yesterday_was_bad(workouts_recent):
@@ -384,6 +412,7 @@ def build_payload(quote: dict, category: str, context: dict | None = None) -> di
         "lsd_run":           "🏃 Lange run vandaag — vertrouw je benen",
         "groene_reeks":      "💚 Groene reeks — stay locked in",
         "slechte_week":      "⚠️ Herpak je — Nu",
+        "niet_volledig":     "💛 Gedaan telt — vandaag iets verder",
         "vorige_training_rood": "🔁 Gisteren oranje — vandaag groen",
         "herstel":           "🧘 Hersteldag — bescherm de opbouw",
         "comeback":          f"📈 Weg naar {a_name} — {countdown}",
@@ -411,6 +440,7 @@ def build_payload(quote: dict, category: str, context: dict | None = None) -> di
         "lsd_run":              ["runner"],
         "groene_reeks":         ["white_check_mark"],
         "slechte_week":         ["warning"],
+        "niet_volledig":        ["muscle"],
         "vorige_training_rood": ["arrows_counterclockwise"],
         "herstel":              ["zzz"],
         "comeback":             ["arrow_up"],

@@ -63,6 +63,16 @@
     { "text": "I made it, I made it. Jij hebt het ook gemaakt. En je maakt het opnieuw.", "source": "🎵 Tones and I — I Made It" }
   ],
 
+  "niet_volledig": [
+    { "text": "Niet de volle 90 minuten, maar je hebt de schoenen aangetrokken. Dat is al meer dan de meesten doen.", "source": "" },
+    { "text": "Een verkorte sessie is beter dan geen sessie. Je lichaam weet het verschil.", "source": "" },
+    { "text": "Soms stopt het lichaam vroeger dan gepland. Dat is geen zwakte — dat is luisteren.", "source": "" },
+    { "text": "Je hebt de afgelopen dagen iets gedaan, ook als het niet altijd volledig was. Vandaag doe je iets meer.", "source": "" },
+    { "text": "Incomplete doesn't mean unimportant. You showed up.", "source": "" },
+    { "text": "Consistent aanwezig zijn, ook als het niet perfect gaat — dat is hoe kampioenen worden gebouwd.", "source": "" },
+    { "text": "Je hebt gedaan wat je kon. Vandaag geef je iets meer richting Nice.", "source": "" }
+  ],
+
   "slechte_week": [
     { "text": "Jonas. Ik zie het. Je hebt deze week al trainingen laten liggen. Genoeg. Vandaag reset je. Verbreek de reeks — begin een nieuwe.", "source": "" },
     { "text": "Stop met tellen hoeveel je hebt gemist. Begin met tellen hoeveel je nog kunt doen.", "source": "" },
