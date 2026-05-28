@@ -196,17 +196,19 @@ async def get_training_context() -> dict:
         tomorrow = today + timedelta(days=1)
         ten_ago  = today - timedelta(days=10)
 
-        # Fitness
+        # Fitness (optioneel — 402 bij niet-premium plan is normaal)
         fitness = await tp_get_fitness(days=14)
         if fitness.get("isError"):
-            return {
-                "error":      f"TP fitness API: {fitness.get('message', 'onbekend')}",
-                "error_code": fitness.get("error_code", ""),
-            }
-        current = fitness.get("current") or {}
-        tsb = current.get("tsb", 0.0)
-        ctl = current.get("ctl", 0.0)
-        atl = current.get("atl", 0.0)
+            _fc = fitness.get("error_code", "")
+            if _fc in AUTH_ERROR_CODES:
+                return {"error": f"TP fitness API: {fitness.get('message', '')}", "error_code": _fc}
+            print(f"[WARN] Fitness niet beschikbaar ({fitness.get('message', '')}), TSB/CTL/ATL op 0")
+            tsb = ctl = atl = 0.0
+        else:
+            current = fitness.get("current") or {}
+            tsb = current.get("tsb", 0.0)
+            ctl = current.get("ctl", 0.0)
+            atl = current.get("atl", 0.0)
 
         # Vandaag
         w_today = await tp_get_workouts(start_date=str(today), end_date=str(today))
@@ -488,14 +490,17 @@ async def run_check_tomorrow() -> None:
     try:
         fitness  = await tp_get_fitness(days=14)
         if fitness.get("isError"):
-            print(f"[WARN] Fitness API fout: {fitness.get('message', 'onbekend')}")
-            if fitness.get("error_code") in AUTH_ERROR_CODES:
+            _fc = fitness.get("error_code", "")
+            if _fc in AUTH_ERROR_CODES:
                 send_cookie_expired_notification()
-            return
-        current  = fitness.get("current") or {}
-        tsb = current.get("tsb", 0.0)
-        ctl = current.get("ctl", 0.0)
-        atl = current.get("atl", 0.0)
+                return
+            print(f"[WARN] Fitness niet beschikbaar ({fitness.get('message', '')}), TSB/CTL/ATL op 0")
+            tsb = ctl = atl = 0.0
+        else:
+            current  = fitness.get("current") or {}
+            tsb = current.get("tsb", 0.0)
+            ctl = current.get("ctl", 0.0)
+            atl = current.get("atl", 0.0)
 
         w_tomorrow = await tp_get_workouts(start_date=str(tomorrow), end_date=str(tomorrow))
         if w_tomorrow.get("isError"):
