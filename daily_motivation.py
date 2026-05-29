@@ -5,7 +5,7 @@ Leest TrainingPeaks data en stuurt een contextgebonden push-notificatie naar iPh
 
 Gebruik:
   python daily_motivation.py                → volledige versie met TrainingPeaks
-  python daily_motivation.py --test         → testmodus, zonder TP-data
+  python daily_motivation.py --test         → testmodus: stuurt "🧪 Test geslaagd!" zonder TP-data
   python daily_motivation.py --check-tomorrow → controle morgen (geen notificatie)
 """
 
@@ -625,9 +625,19 @@ async def main():
 
     # ── Testmodus ────────────────────────────────────────────────────────────
     if test_mode:
-        print("[TEST] Testmodus — TrainingPeaks overgeslagen")
-        context  = {"error": "test"}
-        category = "general"
+        print("[TEST] Testmodus — volledige keten verificatie (geen TP-data)")
+        payload = {
+            "topic":    NTFY_TOPIC,
+            "title":    "🧪 Test geslaagd!",
+            "message":  "cron-job.org → GitHub Actions → Python → ntfy.sh ✓\nAlle schakels werken.",
+            "priority": 3,
+            "tags":     ["white_check_mark"],
+        }
+        success = send_notification(payload)
+        print("[OK]  Test notificatie verstuurd!" if success else "[FOUT] Versturen mislukt.")
+        if not success:
+            sys.exit(1)
+        return
     else:
         print("[INFO] TrainingPeaks data ophalen...")
         context = await get_training_context()

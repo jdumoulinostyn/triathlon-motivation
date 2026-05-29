@@ -49,6 +49,8 @@ jobs:
           MODE="${{ github.event.inputs.mode }}"
           if [ "${{ github.event.schedule }}" = "0 10 * * *" ] || [ "$MODE" = "check-tomorrow" ]; then
             python3 daily_motivation.py --check-tomorrow
+          elif [ "$MODE" = "test" ]; then
+            python3 daily_motivation.py --test
           else
             python3 daily_motivation.py
           fi
